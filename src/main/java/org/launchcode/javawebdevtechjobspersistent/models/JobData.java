@@ -26,22 +26,28 @@ public class JobData {
         ArrayList<Job> results = new ArrayList<>();
 
         if (value.toLowerCase().equals("all")){
-            return (ArrayList<Job>) allJobs;
-        }
-
-        if (column.equals("all")){
             results = findByValue(value, allJobs);
             return results;
-        }
-        for (Job job : allJobs) {
+        } else if (column.equals("skill")) {
+            for (Job job : allJobs) {
+                for (Skill skill : job.getSkills()){
+                    if(skill.getName().toLowerCase().contains(value.toLowerCase())){
+                        results.add(job);
+                        break;
+                    }
+                }
+            }
+            return results;
+        } else {
+            for (Job job : allJobs) {
 
-            String aValue = getFieldValue(job, column);
+                String aValue = getFieldValue(job, column);
 
-            if (aValue != null && aValue.toLowerCase().contains(value.toLowerCase())) {
-                results.add(job);
+                if (aValue != null && aValue.toLowerCase().contains(value.toLowerCase())) {
+                    results.add(job);
+                }
             }
         }
-
         return results;
     }
 
@@ -72,13 +78,13 @@ public class JobData {
 
         for (Job job : allJobs) {
 
-            if (job.getName().toLowerCase().contains(lower_val)) {
+            if (job.getName().toLowerCase().contains(value.toLowerCase())) {
                 results.add(job);
-            } else if (job.getEmployer().toString().toLowerCase().contains(lower_val)) {
+            } else if (job.getEmployer().toString().toLowerCase().contains(value.toLowerCase())) {
                 results.add(job);
-            } else if (job.getSkills().toString().toLowerCase().contains(lower_val)) {
+            } else if (job.getSkills().toString().toLowerCase().contains(value.toLowerCase())) {
                 results.add(job);
-            } else if (job.toString().toLowerCase().contains(lower_val)) {
+            } else if (job.toString().toLowerCase().contains(value.toLowerCase())) {
                 results.add(job);
             }
 
