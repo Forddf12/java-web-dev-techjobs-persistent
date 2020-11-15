@@ -19,6 +19,13 @@ public class SkillController {
     @Autowired
     private SkillRepository skillRepository;
 
+    @RequestMapping("")
+    public String index(Model model) {
+        model.addAttribute("title", "Applicable Skills");
+        model.addAttribute("skills", skillRepository.findAll());
+        return "skills/index";
+    }
+
     @GetMapping
     public String displayAllSkills(Model model) {
         model.addAttribute("title" , "All Skills");
@@ -35,6 +42,7 @@ public class SkillController {
     @PostMapping("add")
     public String processAddSkillForm(@ModelAttribute @Valid Skill newSkill, Errors errors, Model model){
         if (errors.hasErrors()) {
+            model.addAttribute("title", "All Skills");
             return "skills/add";
         }
         skillRepository.save(newSkill);
@@ -47,8 +55,8 @@ public class SkillController {
         Optional <Skill> optSkill = skillRepository.findById(skillId);
 
         if (optSkill.isPresent()) {
-            Skill skill = (Skill) optSkill.get();
-            model.addAttribute("skills", skill);
+            Skill skill = optSkill.get();
+            model.addAttribute("skill", skill);
             return "skills/view";
         } else {
 
