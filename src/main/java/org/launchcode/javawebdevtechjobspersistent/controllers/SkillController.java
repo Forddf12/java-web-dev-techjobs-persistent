@@ -1,7 +1,8 @@
 package org.launchcode.javawebdevtechjobspersistent.controllers;
 
-import org.launchcode.javawebdevtechjobspersistent.models.Employer;
+import org.launchcode.javawebdevtechjobspersistent.models.Job;
 import org.launchcode.javawebdevtechjobspersistent.models.Skill;
+import org.launchcode.javawebdevtechjobspersistent.models.data.JobRepository;
 import org.launchcode.javawebdevtechjobspersistent.models.data.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -19,6 +21,9 @@ public class SkillController {
     @Autowired
     private SkillRepository skillRepository;
 
+    @Autowired
+    private JobRepository jobRepository;
+
     @RequestMapping("")
     public String index(Model model) {
         model.addAttribute("title", "Applicable Skills");
@@ -26,9 +31,9 @@ public class SkillController {
         return "skills/index";
     }
 
-    @GetMapping
+    @GetMapping("view")
     public String displayAllSkills(Model model) {
-        model.addAttribute("title" , "All Skills");
+        model.addAttribute("title", "All Skills");
         model.addAttribute("skills", skillRepository.findAll());
         return "skills/index";
     }
@@ -40,8 +45,8 @@ public class SkillController {
     }
 
     @PostMapping("add")
-    public String processAddSkillForm(@ModelAttribute @Valid Skill newSkill, Errors errors, Model model){
-        if (errors.hasErrors()) {
+    public String processAddSkillForm(@ModelAttribute @Valid Skill newSkill, Errors errors, Model model) {
+        if(errors.hasErrors()) {
             model.addAttribute("title", "All Skills");
             return "skills/add";
         }
@@ -53,15 +58,15 @@ public class SkillController {
     public String displayViewSkill(Model model, @PathVariable int skillId) {
 
         Optional <Skill> optSkill = skillRepository.findById(skillId);
+        //List<Job> jobList = (List<Job>) jobRepository.findAllById(skillId);
 
         if (optSkill.isPresent()) {
             Skill skill = optSkill.get();
+            //model.addAttribute("jobs", jobList);
             model.addAttribute("skill", skill);
             return "skills/view";
         } else {
-
             return "redirect:../";
         }
     }
-
 }
